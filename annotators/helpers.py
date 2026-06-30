@@ -1,4 +1,5 @@
 from django.core.mail import send_mail
+from django.conf import settings
 
 
 def send_annotator_welcome_email(annotator, inviting_contributor, project):
@@ -12,7 +13,7 @@ def send_annotator_welcome_email(annotator, inviting_contributor, project):
         Best regards,\n
         Annopedia Team
     '''
-    email_from = 'annopedia@zohomail.eu'
+    email_from = settings.DEFAULT_FROM_EMAIL
     recipient_list = [annotator.contributor.email]
     # https://docs.djangoproject.com/en/4.1/topics/email/
     send_mail(subject, message, email_from, recipient_list)
