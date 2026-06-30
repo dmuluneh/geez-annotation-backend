@@ -40,10 +40,13 @@ def invite_annotator(request, project_url: str, private_annotator_data: CreatePr
     annotator = PrivateAnnotator.objects.create(
         project=project, contributor=contributor, inviting_contributor=request.user, token=uuid4().hex
     )
-    # if private_annotator_data.send_email:
-    send_annotator_welcome_email(annotator, request.user, project)
+    try:
+        send_annotator_welcome_email(annotator, request.user, project)
+    except Exception:
+        pass  # Email failure should not block the invite
     return 200, {
         **model_to_dict(annotator),
+        'email': annotator.contributor.email,
         'inviting_contributor': request.user.username,
         'contributor': annotator.contributor.username,
         'is_active': annotator.contributor.is_active,
